@@ -1,11 +1,12 @@
 /*
  * Functions to mutate/change data on the API
  */
+import { env } from "process";
+
 import type { AuthSession } from "../types/auth.types";
 import { getAuthSession } from "../utils/storage";
 import doRequest from "./request";
-
-const backend_api = "http://localhost:8080";
+const backend_api = "https://api.roomfin.xyz";
 export async function login(email: string, password: string) {
   return await doRequest<AuthSession>(
     `${backend_api}/auth/login`,
