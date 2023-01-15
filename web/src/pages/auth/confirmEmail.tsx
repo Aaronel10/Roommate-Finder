@@ -55,7 +55,8 @@ export default function ConfirmEmail() {
 
   if (emailConfirmed) {
     setTimeout(() => {
-      void router.push("/explore");
+      //go back to login
+      void router.push("/auth");
     }, 5000);
   }
 
