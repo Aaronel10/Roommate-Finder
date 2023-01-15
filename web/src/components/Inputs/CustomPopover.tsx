@@ -90,8 +90,8 @@ export default function CustomPopover({
                   variants={transitionVariants}
                   style={{
                     position: strategy,
-                    top: y ?? 0,
-                    left: x ?? 0,
+                    top: y ?? -20,
+                    left: x ?? 150,
                   }}
                   className={
                     "z-50 w-max max-w-[90vw] rounded-xl bg-slate-50/90 p-2 shadow-lg ring-1 ring-black/5 backdrop-blur-md transition-colors duration-200"
