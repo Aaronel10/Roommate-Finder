@@ -15,14 +15,14 @@ export default function useAuthRedirect() {
     queryFn: authenticateUser,
     onSuccess: (data) => {
       storeAuthSession(data);
-      if (!data.user?.is_verified) {
+      if (data.user && !data.user.is_verified) {
         if (!router.pathname.startsWith(path.auth)) {
           void router.push({
             pathname: "/auth/confirmEmail",
             query: { email: data.user?.email },
           });
         }
-      } else if (!data.user?.is_setup) {
+      } else if (data.user && !data.user.is_setup) {
         void router.push(path.setup);
       } else if (router.pathname.startsWith(path.auth)) {
         void router.push(path.explore);
