@@ -128,7 +128,7 @@ const ActivateEmailSent = (props: any, {navigation}:any) => {
         style={Style.alignRight}
         >
             <_Button
-            style={[props.btnStyle(disabled), {marginBottom:"5px"}]}
+            style={[props.btnStyle(disabled), {marginBottom:5}]}
             onPress={() => doResendEmail()}
             disabled={disabled}
             >
