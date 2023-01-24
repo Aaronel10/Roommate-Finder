@@ -16,8 +16,16 @@
     "android-vsc": "concurrently \"npm run server\" \"npm run client\" \"cd client && npx react-native run-android\""
   },
   "dependencies": {
+    "@types/react": "~18.0.24",
+    "@types/react-native": "~0.70.6",
+    "expo": "^47.0.13",
+    "expo-linking": "~3.3.0",
+    "metro-core": "^0.74.1",
     "react-native-eject": "^0.1.2",
+    "react-native-gesture-handler": "~2.8.0",
     "react-native-safe-area-context": "^4.4.1",
-    "react-native-screens": "^3.18.2"
+    "react-native-screens": "^3.18.2",
+    "react-native-svg": "13.4.0",
+    "react-scripts": "^5.0.1"
   }
 }
