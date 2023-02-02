@@ -459,7 +459,7 @@ router.get('/getBioAndTags', async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).json({ Error: 'User not found' });
     }
-    const data = await GetTagsandBio(userId);
+    const data = await GetTagsandBio(userId as string);
     //console.log(data[0])
     return res.status(200).json(data[0]);
   } catch (err) {

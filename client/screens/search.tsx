@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import _Button from '../components/control/button';
 import _Text from '../components/control/text';
 import _TextInput from '../components/control/text-input';
 import { navProp, NavTo } from '../helper';
+import Profile from '../components/search/profiles';
 
 const SearchScreen = (props: any) => {
     /*
@@ -19,40 +20,83 @@ const SearchScreen = (props: any) => {
     */
     const navigation = useNavigation<navProp>();
     useEffect(() => {
-        // Set the page whether it is for matches or explore
-        let rt = route();
-        if (rt && rt.name == NavTo.Search) {
-            if (rt.params && rt.params['view'] && (rt.params['view'] as string).toLowerCase() == "matches") {
-                if (!props.isMatches)
-                    props.setIsMatches(true);
-            }
-            else {
-                if (props.isMatches)
-                    props.setIsMatches(false); 
-            }
-        }
-        // End
-    }, [props.isMatches, navigation]);
+       
+    }, []);
 
-    const route = () => {
-        if (navigation) {
-            let state = navigation.getState();
-            if (state && state.routes) {
-                return state.routes[state.index];
-            }
-        }
-        return null;
-    }
+        return (
+          <ScrollView style={styles.exploreContainer}>
+            <Text style={styles.heading}>You are viewing{'\n'}everyone here!</Text>
+            <View style={styles.buttonsRow}>
+              <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Filters') }}>
+                <Text style={styles.buttonText}>Filter Results</Text>
+              </TouchableOpacity>
+            </View>
+            <Profile navigation={navigation} />
+            //list of profile caRDS
+          </ScrollView>
+        );
+      };
+    
+    export default SearchScreen;
 
-    return (
-    <View>
-        {props.isMatches ?
-            <_Text>Looking at matches only!</_Text>
-            :
-            <_Text>Looking at everyone!</_Text>
-        }
-    </View>
-    );
-};
-
-export default SearchScreen;
+    
+    
+    
+    const styles = StyleSheet.create({
+      exploreContainer: {
+        flex: 1,
+        backgroundColor: 'white',
+        paddingTop: '10%',
+        // height: '100%',
+        // paddingBottom: '29%',
+        // borderWidth: 3,
+      },
+      heading: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        // elevation: 4,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 1 },
+        // shadowOpacity: 0.8,
+        // shadowRadius: 2,
+      },
+      buttonsRow: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 25,
+        marginBottom: 30,
+      },
+      button: {
+        // marginTop: 25,
+        // marginBottom: 25,
+        marginLeft: 7,
+        marginRight: 7,
+        padding: 10,
+        borderRadius: 7,
+        backgroundColor: 'grey',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      buttonText: {
+        color: 'white',
+        fontSize: 14,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      seeMore: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'grey',
+        textAlign: 'right',
+        textDecorationLine: 'underline',
+        paddingRight: 15,
+        marginBottom: 120
+      }
+    });
