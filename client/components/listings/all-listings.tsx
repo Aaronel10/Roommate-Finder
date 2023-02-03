@@ -1,36 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { Color } from '../../style';
 import ListingCard from './listing-card';
 
 const AllListingsView = (props: any) => {
-  const [allListings, setAllListings] = useState([]);
+  const [allListings, setAllListings] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     generateListings();
   }, [props.allListings, props.selectedFilter]);
 
   const generateListings = () => {
-    let listings = [];
-    if (props.allListings) {
-      listings = props.allListings
-        .filter((item: any) => {
-          if (props.selectedFilter === 'all') return true;
-          return item.category === props.selectedFilter;
-        })
-        .map((item: any, key: any) => {
-          return (
-            <ListingCard
-              setListingID={props.setListingID}
-              setIsListing={props.setIsListing}
-              key={key}
-              item={item}
-            />
-          );
-        });
-    }
+    const filteredListings = props.allListings
+      ?.filter((item: any) => (props.selectedFilter === 'all' ? true : item.category === props.selectedFilter))
+      .map((item: any, key: any) => (
+        <ListingCard
+          isDarkMode={props.isDarkMode}
+          setCurrentListing={props.setCurrentListing}
+          setListingID={props.setListingID}
+          setIsListing={props.setIsListing}
+          key={key}
+          item={item}
+        />
+      ));
 
-    setAllListings(listings);
+    setAllListings(filteredListings);
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      ...Platform.select({
+        web:{
+          paddingLeft: 3,
+        }
+      }),
+      backgroundColor: Color(props.isDarkMode).contentBackgroundSecondary,
+    },
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -38,12 +44,5 @@ const AllListingsView = (props: any) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-});
 
 export default AllListingsView;

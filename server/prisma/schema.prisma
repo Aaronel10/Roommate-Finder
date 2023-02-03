@@ -13,7 +13,6 @@ model User {
   is_superuser     Boolean            @default(false)
   is_verified      Boolean            @default(false)
   image            String?
-  bio              String?
   gender           String?
   first_name       String?
   last_name        String?
@@ -34,6 +33,7 @@ model User {
   createdAt        DateTime           @default(now())
   password         String
   updatedAt        DateTime           @updatedAt
+  bio              String?
   Listings         Listings[]
   Message          Message[]
   refreshTokens    RefreshToken[]
@@ -99,20 +99,22 @@ model ResponsesOnUsers {
 }
 
 model Listings {
-  id           String   @id @default(uuid())
-  name         String
-  images       String[]
-  city         String
-  housing_type String
-  description  String
-  price        Float
-  petsAllowed  Boolean
-  userId       String
-  address      String?
-  rooms        Int?
-  bathrooms    Int?
-  size         Int?
-  user         User     @relation(fields: [userId], references: [id])
+  id            String   @id @default(uuid())
+  name          String
+  images        String[]
+  city          String
+  housing_type  String
+  description   String
+  price         Float
+  petsAllowed   Boolean
+  userId        String
+  address       String?
+  bathrooms     Int?
+  rooms         Int?
+  size          Int?
+  zipcode       String?
+  distanceToUcf Int?
+  user          User     @relation(fields: [userId], references: [id])
 }
 
 model Chat {

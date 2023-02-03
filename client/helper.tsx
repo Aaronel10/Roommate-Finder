@@ -5,9 +5,9 @@ import { createContext } from "react";
 import { Dimensions } from "react-native";
 import { Content } from "./style";
 import * as DeepLinking from 'expo-linking';
-import { faCheck, faXmark, faMessage, faCaretDown, faUser, faPoll, faHouseFlag, faCheckDouble, faEdit, faGlobe, faSignOut, faUserPlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faXmark, faMessage, faCaretDown, faUser, faPoll, faHouseFlag, faCheckDouble, faEdit, faGlobe, faSignOut, faUserPlus, faArrowLeft, faRefresh, faStar } from '@fortawesome/free-solid-svg-icons'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-library.add(faArrowLeft, faUserPlus, faCheck, faXmark, faMessage, faCaretDown, faUser, faPoll, faHouseFlag, faCheckDouble, faEdit, faGlobe, faSignOut)
+library.add(faRefresh, faArrowLeft, faUserPlus, faCheck, faXmark, faMessage, faCaretDown, faUser, faPoll, faHouseFlag, faCheckDouble, faEdit, faGlobe, faSignOut, faStar)
 
 export const Stack = createNativeStackNavigator<Page>();
 

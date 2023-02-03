@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, TouchableHighlight, Platform } from 'react-native';
 import FavoriteListings from '../listings/favorite-listings';
 import CreateListing from '../listings/create-listing';
 import ListingsScreen, { Listings_Screen } from '../../screens/listings';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faSearch, faStar, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { Color, Radius } from '../../style';
 
 const BottomNavbar = (props: any) => {
   const [isListingScreenOpen, setIsListingScreenOpen] = React.useState(false);
@@ -31,36 +32,43 @@ const BottomNavbar = (props: any) => {
     container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      padding: 8,
-      backgroundColor: '#fff',
+      padding: 5,
+      backgroundColor: Color(props.isDarkMode).contentBackgroundSecondary,
       borderTopWidth: 1,
-      borderTopColor: '#ddd',
-      borderTopStyle: 'solid',
+      borderTopColor: Color(props.isDarkMode).separator,
+      
     },
     button: {
       alignItems: 'center',
-      backgroundColor: '#fff',
-      padding: 12,
-      borderRadius: 24,
-      width: '30%',
+      padding: 10,
+      borderRadius: Radius.default,
+      width: '33%',
     },
+    icon: {
+      ...Platform.select({
+        web:{
+          outlineStyle: 'none'
+        }
+      })
+    }
   });
 
   return (
     <View style={styles.container}>
       
-      <TouchableOpacity 
+      <TouchableHighlight 
         onPress={() => {
-        onSearch()
-      }} style={styles.button}>
-        <FontAwesomeIcon icon={faSearch} size={24} color={props.currentScreen === Listings_Screen.all ? 'gold' : 'black'} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => onFavorite()} style={styles.button}>
-        <FontAwesomeIcon icon={faStar} size={24} color={props.currentScreen === Listings_Screen.favorites ? 'gold' : 'black'} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => onCreate()} style={styles.button}>
-        <FontAwesomeIcon icon={faPlusCircle} size={24} color={props.currentScreen === Listings_Screen.create ? 'gold' : 'black'} />
-      </TouchableOpacity>
+          onSearch()
+        }} 
+        underlayColor = {Color(props.isDarkMode).contentDialogBackground} style={styles.button}>
+        <FontAwesomeIcon style = {styles.icon} icon={faSearch} size={24} color={props.currentScreen === Listings_Screen.all ? Color(props.isDarkMode).gold : Color(props.isDarkMode).black} />
+      </TouchableHighlight>
+      <TouchableHighlight underlayColor = {Color(props.isDarkMode).contentDialogBackground} onPress={() => onFavorite()} style={styles.button}>
+        <FontAwesomeIcon style = {styles.icon} icon={faStar} size={24} color={props.currentScreen === Listings_Screen.favorites ? Color(props.isDarkMode).gold : Color(props.isDarkMode).black} />
+      </TouchableHighlight>
+      <TouchableHighlight underlayColor = {Color(props.isDarkMode).contentDialogBackground} onPress={() => onCreate()} style={styles.button}>
+        <FontAwesomeIcon style = {styles.icon} icon={faPlusCircle} size={24} color={props.currentScreen === Listings_Screen.create ? Color(props.isDarkMode).gold : Color(props.isDarkMode).black} />
+      </TouchableHighlight>
     </View>
   );
 };
