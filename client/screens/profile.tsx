@@ -1,31 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Fontisto';
 import _Button from '../components/control/button';
 import _TextInput from '../components/control/text-input';
 import { Style, Color, FontSize, Radius } from '../style';
 import _Image from '../components/control/image';
-import { env } from '../helper';
+import { env, navProp, NavTo } from '../helper';
 
 
-const ProfileScreen = ({route}:any) => {
-    /*
-    Daniyal: Add all content for the single page view here,
-    If you need to make reusable components, create a folder
-    in the components folder named "profile" and add your compo>nent files there
-    */
-   
-  const [tags, setTags] = useState([]);
+const ProfileScreen = (props: any) => {
+  /*
+  Daniyal: Add all content for the single page view here,
+  If you need to make reusable components, create a folder
+  in the components folder named "profile" and add your compo>nent files there
+  */
+
+  const [profile, setProfile] = useState<any>();
+  const [tags, setTags] = useState<any[]>([]);
   const [tagsFetched, setTagsFetched] = useState(false);
 
-  const profile = route.params.profile;
-  //const profile = route.params;
+  const navigation = useNavigation<navProp>();
+
+  useEffect(() => {
+    let rt = route();
+    if (rt && rt.params && rt.name && rt.name == NavTo.Profile) {
+      if (rt.params['profile']) {
+        setProfile(rt.params['profile']);
+      }
+    }
+  }, [navigation]);
 
   useEffect(() => {
     getTags();
-  }, []);
+  }, [profile]);
+
+  const route = () => {
+    if (navigation) {
+      let state = navigation.getState();
+      if (state && state.routes) {
+        return state.routes[state.index];
+      }
+    }
+    return null;
+  }
 
   const getTags = async () => {
     //const env = { URL: "http://localhost:8080" }; // to be removed
@@ -52,17 +71,17 @@ const ProfileScreen = ({route}:any) => {
 
   return (
     <ScrollView style={styles.profileContainer}>
-      <Image style={styles.profileImg} source={profile.image} />
-      <Text style={styles.name}>{profile.first_name + " " + profile.last_name}</Text>
-      <Text style={styles.info}>Age: {profile.age} | From: {profile.city}, {profile.state}</Text>
-      <Text style={styles.bio}>"{profile.bio}"</Text>
+      <Image style={styles.profileImg} source={profile?.image} />
+      <Text style={styles.name}>{profile?.first_name + " " + profile?.last_name}</Text>
+      <Text style={styles.info}>Age: {profile?.age} | From: {profile?.city}, {profile?.state}</Text>
+      <Text style={styles.bio}>"{profile?.bio}"</Text>
       <View style={styles.chatRow}>
         <Icon name="messenger" size={32}
           style={styles.chatIcon} onPress={() => { console.log("Chat button pressed") }}>
         </Icon>
       </View>
       <Text style={styles.interestsHeading}>My Interests and Hobbies</Text>
-      {tagsFetched && tags.map((tag, index ) =>
+      {tagsFetched && tags.map((tag, index) =>
         (index % 3 == 0) &&
         <View style={styles.tagsRow} key={index}>
           <View style={styles.tagBox}><Text style={styles.tagText}>{tag?.tag}</Text></View>

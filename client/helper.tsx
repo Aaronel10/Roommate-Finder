@@ -61,6 +61,7 @@ export const NavTo = {
   Profile: 'Profile' as never,
   Survey: 'Survey' as never,
   Search: 'Search' as never,
+  Filters: 'Filters' as never,
   Listings: 'Listings' as never,
   Messages: 'Messages' as never,
   Logout: 'Logout' as never,
@@ -83,6 +84,7 @@ export type Page = {
   Profile: undefined;
   Survey: undefined;
   Search: undefined;
+  Filters: undefined;
   Listings: undefined;
   Messages: undefined;
   Logout: undefined;
@@ -97,6 +99,7 @@ export const config = {
     Survey: '/survey',
     Matches: '/matches',
     Search: '/search',
+    Filters: '/filters',
     Listings: '/listings',
     Messages: '/messages',
     Logout: '/logout',

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import ProfileCard from './profile-card';
 import { env } from '../../helper';
 
-const Profile = ({navigation}:any) => {
+const Profile = (props: any, {navigation}:any) => {
     /*
     Daniyal: This component will contain all of the profile card components
     and anything else that is needed for the overall profile view.

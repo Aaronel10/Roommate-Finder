@@ -95,7 +95,7 @@ router.get('/profileSearch', async (req: Request, res: Response) => {
 
 router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const payload:payload = req.body[0];
+    const payload = req.query;
     const userId = payload.userId;
     const users = await db.user.findMany(
       {
@@ -107,6 +107,8 @@ router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunctio
           birthday: true,
           tags: true,
           image: true,
+          city : true,
+          state : true,
           matches: {
             where:{
               userTwoId: userId,
@@ -453,7 +455,7 @@ router.post('/setupProfile', async (req: Request, res: Response, next: NextFunct
 router.get('/getBioAndTags', async (req: Request, res: Response) => {
   try {
     //get payload from body[0]
-    const payload : payload = req.body[0];
+    const payload = req.query;
     const userId = payload.userId;
     const user = await findUserById(userId);
     if (!user) {

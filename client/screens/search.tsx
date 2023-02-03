@@ -27,12 +27,11 @@ const SearchScreen = (props: any) => {
           <ScrollView style={styles.exploreContainer}>
             <Text style={styles.heading}>You are viewing{'\n'}everyone here!</Text>
             <View style={styles.buttonsRow}>
-              <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Filters') }}>
+              <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate(NavTo.Filters); }}>
                 <Text style={styles.buttonText}>Filter Results</Text>
               </TouchableOpacity>
             </View>
-            <Profile navigation={navigation} />
-            //list of profile caRDS
+            <Profile navigation={navigation} />         
           </ScrollView>
         );
       };
