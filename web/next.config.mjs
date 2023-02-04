@@ -18,6 +18,7 @@ const config = {
   },
   images: {
     domains: [
+      "www.kbhome.com",
       "sbleaping.s3.amazonaws.com",
       "i.imgur.com",
       "cdn-icons-png.flaticon.com",

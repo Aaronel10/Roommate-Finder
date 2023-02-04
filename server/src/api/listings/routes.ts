@@ -7,71 +7,92 @@ const prisma = new PrismaClient();
 
 const router = require('express').Router();
 
+router.use(isAuthenticated);
+
 // listings REST API everything is under /listings
 // create listing
-router.post('/', isAuthenticated, async (req: Request, res: Response) => {
-  const { name, images, city, housing_type, description, price, petsAllowed, address } = req.body;
+router.post('/', async (req: Request, res: Response) => {
+  const {
+    name,
+    images,
+    city,
+    housing_type,
+    description,
+    price,
+    petsAllowed,
+    address,
+    bathrooms,
+    rooms,
+    size,
+    zipcode,
+    distanceToUcf,
+  } = req.body;
   const uploadImages = [];
   if (!name) {
-    return res.status(400).json('Name is required');
+    return res.status(400).json({ Error: 'Name is required' });
   }
-  //check if images is an array 
+  //check if images is an array
   if (!images || !Array.isArray(images)) {
-    return res.status(400).json('Images are required');
-  }
-  else{
-      //check if images are base64 string 
+    return res.status(400).json({ Error: 'Images are required' });
+  } else {
+    //check if images are base64 string
     //upload images to s3 bucket
     //add image urls to uploadImages array
-    for(let i = 0; i < images.length; i++){
+    for (let i = 0; i < images.length; i++) {
       const image = images[i];
-      if(!/^data:image\/[a-z]+;base64,/.test(image)) {
+      if (!/^data:image\/[a-z]+;base64,/.test(image)) {
         return res.status(400).json({ Error: 'Image should be a base64 image!' });
       }
       const uploadedImage = await uploadImage(image);
-      if(!uploadedImage) return res.status(400).json('Image Upload Failed');
+
+      if (!uploadedImage) return res.status(400).json({ Error: 'Failed to upload image' });
       uploadImages.push(uploadedImage);
     }
   }
+
   if (!city) {
-    return res.status(400).json('City is required');
+    return res.status(400).json({ Error: 'City is required' });
   }
   if (!housing_type) {
-    return res.status(400).json('Housing type is required');
+    return res.status(400).json({ Error: 'Housing type is required' });
   }
   if (!description) {
-    return res.status(400).json('Description is required');
+    return res.status(400).json({ Error: 'Description is required' });
   }
   if (!price) {
-    return res.status(400).json('Price is required');
+    return res.status(400).json({ Error: 'Price is required' });
   }
   if (!petsAllowed) {
-    return res.status(400).json('Pets allowed is required');
+    return res.status(400).json({ Error: 'Pets allowed is required' });
   }
   if (!address) {
-    return res.status(400).json('Address is required');
+    return res.status(400).json({ Error: 'Address is required' });
   }
   try {
-    // authentication should be added as middleware
-    const payload:payload = req.body[0];
+    const payload: payload = req.body[0];
     const userId = payload.userId;
-    // how are we handling authentication and extracting userId
+
     const listing = await prisma.listings.create({
       data: {
-        name: name,
-        images: uploadImages,
-        city: city,
-        housing_type: housing_type,
-        description: description,
-        price: price,
-        petsAllowed: petsAllowed,
-        userId,
-        address: address || undefined, // address is optional
+        name: name as string,
+        images: uploadImages as string[],
+        city: city as string,
+        housing_type: housing_type as string,
+        description: description as string,
+        price: price as number,
+        petsAllowed: petsAllowed as boolean,
+        userId: userId as string,
+        address: address as string,
+        bathrooms: (bathrooms as number) || undefined,
+        rooms: (rooms as number) || undefined,
+        size: (size as number) || undefined,
+        zipcode: (zipcode as string) || undefined,
+        distanceToUcf: (distanceToUcf as number) || undefined,
       },
     });
     res.status(200).json(listing);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ Error: err.message });
   }
 });
 
