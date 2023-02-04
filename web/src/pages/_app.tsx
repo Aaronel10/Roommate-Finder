@@ -17,7 +17,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <AuthRedirectWrapper>
           {!router.pathname.includes("/auth") && <Nav />}
           <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+          <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
           <Toaster
             position={"bottom-center"}
             containerClassName={"!bottom-16 !select-none !text-center"}

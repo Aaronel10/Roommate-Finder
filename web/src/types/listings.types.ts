@@ -12,6 +12,7 @@ export interface ListingInfo {
   rooms?: number;
   size?: number;
   description: string;
+  distanceToUcf?: number;
 }
 
 export interface ListingData {

@@ -20,7 +20,7 @@ export default function Listings() {
           <ul className="">
             {data.map((listing: ListingInfo) => {
               return (
-                <li key={listing.id} className="h-128 w-128">
+                <li key={listing.id}>
                   <ListingCard listing={listing} />
                 </li>
               );
