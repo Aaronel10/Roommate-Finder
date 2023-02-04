@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import ProfileCard from './profile-card';
-import { env } from '../../helper';
+import { env, authTokenHeader } from '../../helper';
 
 const Profile = (props: any, {navigation}:any) => {
     /*
@@ -29,7 +29,7 @@ const Profile = (props: any, {navigation}:any) => {
     try {
       console.log("Inside getAllProfiles");
       await fetch(`${env.URL}/users/Allprofiles`,
-        { method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(async ret => {
+        { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization' : await authTokenHeader() } }).then(async ret => {
           let res = JSON.parse(await ret.text());
           console.log(res);
           if (res.Error) {

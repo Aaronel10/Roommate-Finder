@@ -7,7 +7,7 @@ import _Button from '../components/control/button';
 import _TextInput from '../components/control/text-input';
 import { Style, Color, FontSize, Radius } from '../style';
 import _Image from '../components/control/image';
-import { env, navProp, NavTo } from '../helper';
+import { env, navProp, NavTo, authTokenHeader } from '../helper';
 
 
 const ProfileScreen = (props: any) => {
@@ -51,7 +51,7 @@ const ProfileScreen = (props: any) => {
     try {
       console.log("Inside getTags");
       await fetch(`${env.URL}/users/getBioAndTags?userId=${profile.id}`,
-        { method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(async ret => {
+        { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization' : await authTokenHeader()} }).then(async ret => {
           let res = JSON.parse(await ret.text());
           console.log(res);
           if (res.Error) {
