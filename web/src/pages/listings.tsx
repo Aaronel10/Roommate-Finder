@@ -16,8 +16,8 @@ export default function Listings() {
       {isLoading || !data ? (
         <div>Loading...</div>
       ) : (
-        <div className="flex justify-center">
-          <ul className="">
+        <div className="flex">
+          <ul>
             {data.map((listing: ListingInfo) => {
               return (
                 <li key={listing.id}>

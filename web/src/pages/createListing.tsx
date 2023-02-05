@@ -17,7 +17,6 @@ export default function CreateListing() {
   const [size, setSize] = useState<number>(0);
   const [bathrooms, setBathrooms] = useState<number>(0);
   const [zipcode, setZipcode] = useState<string>("");
-  // const [address, setAddress] = useState<string>("");
   const [petsAllowed, setPetsAllowed] = useState<boolean>(true);
 
   const { mutate: mutateListing } = useMutation({
@@ -57,29 +56,33 @@ export default function CreateListing() {
     mutateListing(fullAddress);
   };
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // * first make it work with one file
-    const file = e.target.files?.[0];
-
-    if (!file) return;
-    if (file.type !== "image/jpeg" && file.type !== "image/png") {
-      return toast.error("Invalid image type. Only jpg and png are allowed.");
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files as FileList;
+    if (!files) {
+      return;
     }
+    const res = await fileListToBase64(files);
+    setImages(res);
+    console.log(images);
+  };
 
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = () => {
-      if (!fileReader.result) {
-        return toast.error("Could not read file.");
+  const fileListToBase64 = (fileList: FileList): Promise<string[]> => {
+    const files = Array.from(fileList);
+    const promises = files.map((file) => {
+      if (file.type !== "image/jpeg" && file.type !== "image/png") {
+        return toast.error("Invalid image type. Only jpg and png are allowed.");
       }
-      if (fileReader.result.toString().length > 8 * 1024 * 1024) {
+      if (file.size > 8 * 1024 * 1024) {
         return toast.error("Image size is too large. Max size is 8MB.");
       }
-
-      // setImages([...images, fileReader.result.toString()]);
-
-      setImages([fileReader.result.toString()]);
-    };
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+    });
+    return Promise.all<string>(promises);
   };
 
   return (
@@ -167,7 +170,8 @@ export default function CreateListing() {
                         name="file-upload"
                         type="file"
                         multiple
-                        // className="sr-only"
+                        className="sr-only"
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises
                         onChange={handleFiles}
                       />
                     </label>
