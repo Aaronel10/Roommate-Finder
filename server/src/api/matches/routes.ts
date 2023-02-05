@@ -30,7 +30,6 @@ router.get('/all', async (req: Request, res: Response) => {
 // create all the matches for a user thats completed the quiz
 router.post('/create', async (req: Request, res: Response) => {
   try {
-    //const { loggedInUserId } = req.body; why???? 
     const payload: payload = req.body[0];
     const loggedInUserId = payload.userId;
 
@@ -67,7 +66,7 @@ router.post('/create', async (req: Request, res: Response) => {
     }, {});
 
     const userIds = Object.keys(groupedResponses);
-    const totalResponses = await db.response.count();
+    const totalQuestions = await db.question.count();
 
     let mySet = new Set();
     for (const response in loggedInResponses) {
@@ -84,7 +83,7 @@ router.post('/create', async (req: Request, res: Response) => {
             numberInCommon++;
           }
         }
-        matchScore = (numberInCommon / totalResponses) * 100; // ! MATCH SCORE CURRENTLY OFF BECAUSE TOTALRESPONSES IS ACTUALLY 25 BUT QUIZ FRONTNEND HAS 5 QUESTIONS
+        matchScore = (numberInCommon / totalQuestions) * 100;
 
         const upsertMatchScore = await db.matches.upsert({
           where: {
