@@ -14,7 +14,7 @@ const ProfileCard = (props: any) => {
   const navigation = useNavigation<navProp>();
 
   useEffect(() => {
-    setProfile({ ...profile, age: getAge(profile.birthday) });
+    setProfile({ ...profile, age: profile.birthday ? getAge(profile.birthday) : 0 });
   }, []);
 
   function getAge(dateString: any) {
@@ -28,8 +28,6 @@ const ProfileCard = (props: any) => {
     return age;
   }
 
-  // console.log(profile);
-
   return (
     <View style={styles.cardContainer}>
       <View style={styles.row}>
@@ -38,16 +36,24 @@ const ProfileCard = (props: any) => {
           <Text style={styles.regText}>Age: {profile.age}</Text>
           <Text style={styles.regText}>From: {profile.city + ", " + profile.state}</Text>
           <Text style={styles.regText}>Bio: {profile.bio}</Text>
-          <TouchableOpacity onPress={() => { navigation.navigate(NavTo.Profile, { profile: profile } as never) }}>
-            <Text style={styles.viewProfileButton}>View Profile</Text>
-          </TouchableOpacity>
         </View>
         <View style={styles.column2}>
           <Image style={styles.profileImg} source={profile.image} />
         </View>
       </View>
+      <View style={{...styles.row, ...styles.row2}}>
+        <View style={styles.column1}>
+          <TouchableOpacity onPress={() => { navigation.navigate(NavTo.Profile, { profile: profile } as never) }}>
+            <Text style={styles.viewProfileButton}>View Profile</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.column2}>
+          <Text style={styles.match}>Match: {profile.matchPercentage}%</Text>
+        </View>
+      </View>
     </View>
   );
+
 }
 
 export default ProfileCard;
@@ -60,16 +66,19 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     borderRadius: 8,
-    marginBottom: 13
+    marginBottom: 13,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   row: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 12,
-    marginRight: 12,
     // backgroundColor: 'lightgreen',
+  },
+  row2: {
+    paddingTop: 10
   },
   column1: {
     flex: 2,
@@ -90,19 +99,25 @@ const styles = StyleSheet.create({
     paddingRight: 17
   },
   viewProfileButton: {
-    color: 'white',
-    backgroundColor: 'orange',
+    color: 'black',
+    backgroundColor: 'yellow',
     fontWeight: 'bold',
     textAlign: 'center',
     borderRadius: 7,
     width: '60%',
     padding: 10,
-    marginTop: 20,
   },
   profileImg: {
     width: 100,
     height: 100,
     borderWidth: 1,
     borderRadius: Radius.round,
+  },
+  match: {
+    textAlign: 'right',
+    fontStyle: 'italic',
+    paddingTop: '8%',
+    paddingRight: 5,
+    fontWeight: '500'
   }
 });

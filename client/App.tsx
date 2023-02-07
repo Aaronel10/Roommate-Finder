@@ -11,6 +11,7 @@ import SurveyScreen from './screens/survey';
 import ListingsScreen from './screens/listings';
 import MessagesScreen from './screens/messages';
 import SearchScreen from './screens/search';
+import FiltersScreen from './screens/filters';
 import { Color, Content } from './style';
 import { Context, env, getLocalStorage, isMobile, linking, NavTo, Page, setLocalStorage, Stack, isLoggedIn as isLoggedInHelper, navProp } from './helper';
 import LogoutScreen from './screens/logout';
@@ -551,6 +552,18 @@ export const App = (props: any) => {
               setIsMatches={setIsMatches}
               isDarkMode={isDarkMode}
               />}
+              </Stack.Screen>
+              <Stack.Screen
+                  name={NavTo.Filters}
+                  options={{ title: NavTo.Filters, animation: 'none' }}
+                >
+                  {(props: any) => <FiltersScreen
+                    {...props}
+                    mobile={mobile}
+                    isMatches={isMatches}
+                    setIsMatches={setIsMatches}
+                    isDarkMode={isDarkMode}
+                  />}
               </Stack.Screen>
               <Stack.Screen
                   name={NavTo.Listings}

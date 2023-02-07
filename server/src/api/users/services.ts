@@ -53,27 +53,6 @@ export function findUserById(id: any) {
     where: {
       id,
     },
-    select: {
-      id: true,
-      bio: true,
-      first_name: true,
-      last_name: true,
-      is_verified: true,
-      is_active: true,
-      is_superuser: true,
-      is_setup: true,
-      setup_step: true,
-      birthday: true,
-      tags: true,
-      image: true,
-      Listings: true,
-      phone_number: true,
-      zip_code: true,
-      city: true,
-      state: true,
-      gender: true,
-      email: true,
-    }
   });
 }
 
@@ -244,6 +223,42 @@ export function GetTagsandBio(id:string){
         }
       },
     }
+  });
+}
+
+// Get users filtered by tags 
+export async function GetUsersByTags(filters: string[]) {
+  // Fetch userIds corresponding to tags in request
+  const userIdObj = await db.tags.findMany({
+    where: {
+      tag: {
+        in: filters,
+      },
+    },
+    select: {
+      user_id: true,
+    }
+  });
+  // Get users that match the fetched userIds
+  const userIds = userIdObj.map(x => x.user_id);
+  return db.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
+}
+
+// Get match percentages for logged in user with all other users 
+export async function GetMatches(mainUserId: string, userIds: string[]) {
+  return db.matches.findMany({
+    where: {
+      userOneId: mainUserId,
+      userTwoId: {
+        in: userIds,
+      },
+    },
   });
 }
 

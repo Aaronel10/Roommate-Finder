@@ -35,6 +35,7 @@ model User {
   updatedAt        DateTime           @updatedAt
   bio              String?
   Listings         Listings[]
+  Matches          Matches[]
   Message          Message[]
   refreshTokens    RefreshToken[]
   ResponsesOnUsers ResponsesOnUsers[]
@@ -144,6 +145,7 @@ model Matches {
   userOneId       String
   userTwoId       String
   matchPercentage Float
+  User            User   @relation(fields: [userOneId], references: [id])
 
   @@unique([userOneId, userTwoId])
 }

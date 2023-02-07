@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { isAuthenticated } from '../../middleware';
-import { findUserById, findUserByEmail, updateFirstName, updateLastName, updatePhoneNumber, updateGender, updateZip, updateCity, updateState, updateProfilePicture, UpdateTagsandBio, GetTagsandBio, updateSetupStep, completeSetupAndSetStep, updateBday, updateImage } from './services';
+import { findUserById, findUserByEmail, updateFirstName, updateLastName, updatePhoneNumber, updateGender, updateZip, updateCity, updateState, updateProfilePicture, UpdateTagsandBio, GetTagsandBio, updateSetupStep, completeSetupAndSetStep, updateBday, updateImage, GetUsersByTags, GetMatches } from './services';
 import db from '../../utils/db';
 import { uploadImage } from 'utils/uploadImage';
 const router = express.Router();
@@ -32,6 +32,7 @@ router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
     if (!user) {
       return res.status(400).json({ Error: 'User not found' });
     }
+    delete user.password;
     res.status(200).json(user);
   } catch (err) {
     console.log(err);
@@ -43,13 +44,10 @@ router.get('/profile', async (req: Request, res: Response, next: NextFunction) =
   try {
     const { userId } = req.query; 
     const user = await findUserById(userId);
-    if (!user) {
-      return res.status(400).json({ Error: 'User not found' });
-    }
+    delete user.password;
     res.json(user);
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ Error: 'Server error' });
+    next(err);
   }
 });
 
@@ -98,7 +96,7 @@ router.get('/profileSearch', async (req: Request, res: Response) => {
 router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = req.query;
-    const userId = payload.userId;
+    const mainUserId = payload.userId;
     const users = await db.user.findMany(
       {
         select:{
@@ -111,18 +109,63 @@ router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunctio
           image: true,
           city : true,
           state : true,
-          matches: {
-            where:{
-              userTwoId: userId,
-            },
-          },
+          //matches: {
+            //where:{
+             // userTwoId: userId,
+           // },
+          //},
         },
       },
     );
   
+    const userIds = users.map(x => x.id);
+    const matches = await GetMatches(mainUserId as string, userIds);
+
+    const userMap: { [id: string]: any } = {};
+    users.forEach(user => {
+      userMap[user.id] = user;
+    });
+
+    matches.forEach((match : any) => {
+      const user = userMap[match.userTwoId];
+      if (user) {
+        user.matchPercentage = match.matchPercentage;
+      }
+    });
+
     return res.json(users);
   } catch (err) {
     next(err);
+  }
+});
+
+///Get Users filtered by Tags
+router.get('/profilesByTags', async (req: Request, res: Response) => {
+  try {
+    const filters = req.query.filters;
+    const filtersArray = (filters as string).split(',');
+    const users = await GetUsersByTags(filtersArray as string[]);
+
+    const mainUserId = req.query.userId;
+    const userIds = users.map(x => x.id);
+    const matches = await GetMatches(mainUserId as string, userIds);
+
+    const userMap: { [id: string]: any } = {};
+    users.forEach(user => {
+      userMap[user.id] = user;
+    });
+
+    matches.forEach((match : any) => {
+      const user = userMap[match.userTwoId];
+      if (user) {
+        user.matchPercentage = match.matchPercentage;
+      }
+    });
+
+    return res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ Error: 'Server error' });
   }
 });
 

@@ -17,7 +17,7 @@ const ProfileScreen = (props: any) => {
   in the components folder named "profile" and add your compo>nent files there
   */
 
-  const [profile, setProfile] = useState<any>();
+  const [profile, setProfile] = useState<any>({});
   const [tags, setTags] = useState<any[]>([]);
   const [tagsFetched, setTagsFetched] = useState(false);
 
@@ -47,21 +47,22 @@ const ProfileScreen = (props: any) => {
   }
 
   const getTags = async () => {
-    //const env = { URL: "http://localhost:8080" }; // to be removed
     try {
-      console.log("Inside getTags");
-      await fetch(`${env.URL}/users/getBioAndTags?userId=${profile.id}`,
-        { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization' : await authTokenHeader()} }).then(async ret => {
-          let res = JSON.parse(await ret.text());
-          console.log(res);
-          if (res.Error) {
-            console.warn("Error: ", res.Error);
-          }
-          else {
-            setTags(res.tags);
-            setTagsFetched(true);
-          }
-        });
+      if (profile.id) {
+        console.log("Inside getTags");
+        await fetch(`${env.URL}/users/getBioAndTags?userId=${profile.id}`,
+          { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization': await authTokenHeader() } }).then(async ret => {
+            let res = JSON.parse(await ret.text());
+            console.log(res);
+            if (res.Error) {
+              console.warn("Error: ", res.Error);
+            }
+            else {
+              setTags(res.tags);
+              setTagsFetched(true);
+            }
+          });
+      }
     }
     catch (e) {
       console.log(e);
