@@ -39,7 +39,6 @@ model User {
   refreshTokens    RefreshToken[]
   ResponsesOnUsers ResponsesOnUsers[]
   tags             tags[]
-  matches          Matches[]
 }
 
 model RefreshToken {
@@ -145,7 +144,6 @@ model Matches {
   userOneId       String
   userTwoId       String
   matchPercentage Float
-  User            User?  @relation(fields: [userOneId], references: [id])
 
   @@unique([userOneId, userTwoId])
 }

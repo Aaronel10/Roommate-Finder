@@ -97,7 +97,7 @@ router.get('/profileSearch', async (req: Request, res: Response) => {
 
 router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const payload:payload = req.body[0];
+    const payload = req.query;
     const userId = payload.userId;
     const users = await db.user.findMany(
       {
@@ -109,6 +109,8 @@ router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunctio
           birthday: true,
           tags: true,
           image: true,
+          city : true,
+          state : true,
           matches: {
             where:{
               userTwoId: userId,
@@ -455,13 +457,13 @@ router.post('/setupProfile', async (req: Request, res: Response, next: NextFunct
 router.get('/getBioAndTags', async (req: Request, res: Response) => {
   try {
     //get payload from body[0]
-    const payload : payload = req.body[0];
+    const payload = req.query;
     const userId = payload.userId;
     const user = await findUserById(userId);
     if (!user) {
       return res.status(400).json({ Error: 'User not found' });
     }
-    const data = await GetTagsandBio(userId);
+    const data = await GetTagsandBio(userId as string);
     //console.log(data[0])
     return res.status(200).json(data[0]);
   } catch (err) {
