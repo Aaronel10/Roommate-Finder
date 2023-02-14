@@ -139,9 +139,13 @@ router.get('/Allprofiles', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-///Get Users filtered by Tags
+//Get Users filtered by Tags
 router.get('/profilesByTags', async (req: Request, res: Response) => {
   try {
+
+    console.log("Inside profilesByTags API");
+    console.log(req.query);
+
     const filters = req.query.filters;
     const filtersArray = (filters as string).split(',');
     const users = await GetUsersByTags(filtersArray as string[]);
@@ -155,13 +159,12 @@ router.get('/profilesByTags', async (req: Request, res: Response) => {
       userMap[user.id] = user;
     });
 
-    matches.forEach((match : any) => {
+    matches.forEach(match => {
       const user = userMap[match.userTwoId];
       if (user) {
         user.matchPercentage = match.matchPercentage;
       }
     });
-
     return res.status(200).json(users);
   } catch (err) {
     console.log(err);

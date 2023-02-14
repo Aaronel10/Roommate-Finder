@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Fontisto';
@@ -70,6 +70,14 @@ const ProfileScreen = (props: any) => {
     }
   };
 
+  //if (!profile.id) {
+    //return (
+      //<View style={styles.loadingScreen}>
+       // <ActivityIndicator size="large" />
+     // </View>
+    //);
+  //}
+
   return (
     <ScrollView style={styles.profileContainer}>
       <Image style={styles.profileImg} source={profile?.image} />
@@ -82,23 +90,30 @@ const ProfileScreen = (props: any) => {
         </Icon>
       </View>
       <Text style={styles.interestsHeading}>My Interests and Hobbies</Text>
-      {tagsFetched && tags.map((tag, index) =>
+      {tagsFetched ? tags.map((tag, index) =>
         (index % 3 == 0) &&
         <View style={styles.tagsRow} key={index}>
           <View style={styles.tagBox}><Text style={styles.tagText}>{tag?.tag}</Text></View>
           {tags[index + 1]?.tag && <View style={styles.tagBox}><Text style={styles.tagText}>{tags[index + 1]?.tag}</Text></View>}
           {tags[index + 2]?.tag && <View style={styles.tagBox}><Text style={styles.tagText}>{tags[index + 2]?.tag}</Text></View>}
         </View>
-      )}
+      )
+        :
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      }
     </ScrollView>
   );
 
 };
-
 export default ProfileScreen;
 
 
 const styles = StyleSheet.create({
+  loadingScreen: {
+    paddingTop: '50%',
+  },
   profileContainer: {
     flex: 1,
     backgroundColor: 'white',

@@ -227,24 +227,31 @@ export function GetTagsandBio(id:string){
 }
 
 // Get users filtered by tags 
+// Get users filtered by tags 
 export async function GetUsersByTags(filters: string[]) {
-  // Fetch userIds corresponding to tags in request
-  const userIdObj = await db.tags.findMany({
-    where: {
-      tag: {
-        in: filters,
-      },
-    },
+  const allTags = await db.tags.findMany({
     select: {
-      user_id: true,
+      tag: true,
+      user_id: true
     }
   });
-  // Get users that match the fetched userIds
-  const userIds = userIdObj.map(x => x.user_id);
+  
+  const userTags: { [key: string]: string[] } = allTags.reduce((acc, current) => {
+    acc[current.user_id] = acc[current.user_id] || [];
+    acc[current.user_id].push(current.tag);
+    return acc;
+  }, {} as { [key: string]: string[] });
+
+  const userIDs = Object.keys(userTags).filter(user_id => {
+    const userTagList = userTags[user_id];
+    return filters.every(filter => userTagList.includes(filter));
+  });
+
+  // Get users that match the fetched userIDs
   return db.user.findMany({
     where: {
       id: {
-        in: userIds,
+        in: userIDs,
       },
     },
   });
